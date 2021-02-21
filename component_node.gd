@@ -22,6 +22,6 @@ func cache_nodes() -> void:
 		entity_node = null
 
 
-func _threaded_instance_setup(p_instance_id: int, p_network_reader: Reference) -> void:
+func _threaded_instance_setup(_instance_id: int, _network_reader: Reference) -> void:
 	pass
 

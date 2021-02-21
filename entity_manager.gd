@@ -44,25 +44,21 @@ func get_entity_root_node() -> Node:
 
 
 # Dispatches a deferred add/remove entity command to the scene tree execution table 
-func scene_tree_execution_command(p_command: int, p_entity_instance: Node, p_parent_instance: Node):
-	var parent_instance: Node = null
-	if p_parent_instance == null:
-		parent_instance = get_entity_root_node()
-	else:
-		parent_instance = p_parent_instance
-
+func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 	scene_tree_execution_table.scene_tree_execution_command(
-		p_command, p_entity_instance, parent_instance
-	)
+		p_command, p_entity_instance)
 
 
 func _add_entity(p_entity: Node) -> void:
+	assert(!entity_reference_dictionary.has(p_entity))
 	entity_reference_dictionary[p_entity.get_entity_ref()] = p_entity
 
 
 func _remove_entity(p_entity: Node) -> void:
-	entity_reference_dictionary.erase(p_entity.get_entity_ref())
-	entity_kinematic_integration_callbacks.erase(p_entity)
+	if entity_reference_dictionary.has(p_entity.get_entity_ref()):
+		assert(entity_reference_dictionary.erase(p_entity.get_entity_ref()))
+	if entity_kinematic_integration_callbacks.has(p_entity):
+		entity_kinematic_integration_callbacks.erase(p_entity)
 
 func _delete_entity_unsafe(p_entity: Node) -> void:
 	if p_entity and ! p_entity.is_queued_for_deletion():
@@ -271,8 +267,7 @@ func spawn_entity(
 	if instance:
 		EntityManager.scene_tree_execution_command(
 			EntityManager.scene_tree_execution_table_const.ADD_ENTITY,
-			instance,
-			null
+			instance
 		)
 		return instance.get_entity_ref()
 	
@@ -301,9 +296,9 @@ func _process_reparenting() -> void:
 
 
 func _process(p_delta: float) -> void:
-	var scheduler_usec_start:int = OS.get_ticks_usec()
-	var jobs: Array = _create_entity_update_jobs()
-	var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
+	#var scheduler_usec_start:int = OS.get_ticks_usec()
+	#var jobs: Array = _create_entity_update_jobs()
+	#var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
 	
 	var all_entities_representation_process_usec_start:int = OS.get_ticks_usec()
 	for entity in get_all_entities():
@@ -318,9 +313,9 @@ func _physics_process(p_delta: float) -> void:
 	
 	_process_reparenting()
 	
-	var scheduler_usec_start:int = OS.get_ticks_usec()
+	#var scheduler_usec_start:int = OS.get_ticks_usec()
 	var jobs: Array = _create_entity_update_jobs()
-	var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
+	#var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
 	
 	var entity_update_dependencies_usec_start: int = OS.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():

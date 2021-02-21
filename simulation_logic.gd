@@ -23,11 +23,11 @@ func cache_node(p_node_path: NodePath) -> Node:
 	return get_node_or_null(p_node_path)
 
 
-func get_attachment_id(p_attachment_string: String) -> int:
+func get_attachment_id(_attachment_string: String) -> int:
 	return -1
 
 
-func get_attachment_node(p_attachment_id: int) -> Node:
+func get_attachment_node(_attachment_id: int) -> Node:
 	return get_entity_node()
 
 
@@ -70,14 +70,14 @@ func _entity_ready() -> void:
 	pass
 
 
-func entity_child_pre_remove(p_entity_child: Node) -> void:
+func entity_child_pre_remove(_entity_child: Node) -> void:
 	pass
 
 
-func can_request_master_from_peer(p_id: int) -> bool:
+func can_request_master_from_peer(_id: int) -> bool:
 	return false
 
 
-func can_transfer_master_from_session_master(p_id: int) -> bool:
+func can_transfer_master_from_session_master(_id: int) -> bool:
 	return false
 

@@ -95,18 +95,18 @@ func clear_entity_signal_connections() -> void:
 		disconnect(connection["signal"], connection["target"], connection["method"])
 	
 func _create_strong_exclusive_dependency(p_entity_ref: Reference) -> void:
-	var mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
 	pending_dependency_commands.push_back({"command":DependencyCommand.ADD_STRONG_EXCLUSIVE_DEPENDENCY, "entity":p_entity_ref})
 
 
 func _remove_strong_exclusive_dependency(p_entity_ref: Reference) -> void:
-	var mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
 	pending_dependency_commands.push_back({"command":DependencyCommand.REMOVE_STRONG_EXCLUSIVE_DEPENDENCY, "entity":p_entity_ref})
 
 
 func _update_dependencies() -> void:
 	for pending_dependency in pending_dependency_commands:
-		var entity: Node = pending_dependency["entity"]._entity
+		var entity: RuntimeEntity = pending_dependency["entity"]._entity
 		if entity:
 			match pending_dependency["command"]:
 				DependencyCommand.ADD_STRONG_EXCLUSIVE_DEPENDENCY:
@@ -124,8 +124,10 @@ func _update_dependencies() -> void:
 					else:
 						strong_exclusive_dependencies[entity] -= 1
 						if strong_exclusive_dependencies[entity] <= 0:
-							strong_exclusive_dependencies.erase(entity)
-							entity.strong_exclusive_dependents.erase(self)
+							if strong_exclusive_dependencies.erase(entity):
+								entity.strong_exclusive_dependents.erase(self)
+							else:
+								printerr("Could not erase strong exclusive dependency!")
 	pending_dependency_commands.clear()
 
 

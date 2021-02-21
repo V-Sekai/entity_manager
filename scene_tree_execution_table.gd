@@ -42,7 +42,7 @@ func _remove_entity_instance_unsafe(p_instance: Node) -> void:
 
 
 func copy_and_clear_scene_tree_execution_table() -> Array:
-	var mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
 	var table: Array = []
 	if scene_tree_execution_table.size():
 		table = scene_tree_execution_table.duplicate()
@@ -66,7 +66,7 @@ func _execute_scene_tree_execution_table_unsafe():
 # Clears the scene tree execution table. Add entities marked
 # scheduled to be added will be queued to be freed
 func cancel_scene_tree_execution_table():
-	var mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
 
 	for entry in scene_tree_execution_table:
 		match entry.command:
@@ -78,8 +78,8 @@ func cancel_scene_tree_execution_table():
 
 # Adds a command to add or remove an entity from the scene.
 # The commands will later be executed on the scene tree
-func scene_tree_execution_command(p_command: int, p_entity_instance: Node, p_parent_instance: Node):
-	var mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
+func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_scene_tree_table_mutex)
 
 	match p_command:
 		ADD_ENTITY:
