@@ -275,7 +275,7 @@ func spawn_entity(
 
 
 func _reparent_unsafe(p_entity: Node, p_entity_parent_ref: EntityRef, p_attachment_id: int) -> void:
-	var global_transform: Transform = p_entity.get_global_transform()
+	var global_transform: Transform = p_entity.get_global_transform().orthonormalized()
 	
 	p_entity.get_parent().remove_child(p_entity)
 	if p_entity_parent_ref:

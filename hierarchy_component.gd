@@ -37,7 +37,7 @@ func request_reparent_entity(p_entity_parent_ref: EntityRef, p_attachment_id: in
 			if ! EntityManager.reparent_pending.has(entity_node):
 				EntityManager.reparent_pending.push_back(entity_node)
 
-func _enter_tree() -> void:
+func _ready():
 	if ! Engine.is_editor_hint():
 		cache_nodes()
 		
@@ -50,6 +50,8 @@ func _enter_tree() -> void:
 			
 		emit_signal("entity_parent_changed")
 
+func _enter_tree():
+	request_ready()
 
 func _exit_tree() -> void:
 	if ! Engine.is_editor_hint():
