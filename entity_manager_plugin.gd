@@ -1,5 +1,5 @@
+@tool
 extends EditorPlugin
-tool
 
 var editor_interface: EditorInterface = null
 
@@ -14,7 +14,7 @@ func _notification(p_notification: int):
 			print("Destroying EntityManager plugin")
 
 
-func get_name() -> String:
+func _get_plugin_name() -> String:
 	return "EntityManager"
 
 
@@ -25,15 +25,15 @@ func _enter_tree() -> void:
 
 	add_custom_type(
 		"SpatialEntity",
-		"Spatial",
-		preload("entity.gd"),
-		editor_interface.get_base_control().get_icon("Spatial", "EditorIcons")
+		"Node3D",
+		load("entity.gd"),
+		editor_interface.get_base_control().get_theme_icon("Node3D", "EditorIcons")
 	)
 	add_custom_type(
 		"Node2DEntity",
 		"Node2D",
-		preload("entity.gd"),
-		editor_interface.get_base_control().get_icon("Node2D", "EditorIcons")
+		load("entity.gd"),
+		editor_interface.get_base_control().get_theme_icon("Node2D", "EditorIcons")
 	)
 
 

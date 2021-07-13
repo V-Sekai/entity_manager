@@ -1,9 +1,9 @@
-extends "component_node.gd"
-class_name SimulationLogic
-tool
+@tool
+class_name SimulationLogic extends "res://addons/entity_manager/component_node.gd" # component_node.gd
+
 
 # Static value, do not edit at runtime
-export(String) var _entity_type: String = ""
+@export var _entity_type: String # (String) = ""
 
 func _enter_tree() -> void:
 	if ! Engine.is_editor_hint():

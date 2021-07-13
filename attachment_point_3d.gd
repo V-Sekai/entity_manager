@@ -1,6 +1,9 @@
-extends Spatial
+extends Node3D
 
-var entity: Node = null setget set_entity, get_entity
+var entity: Node = null :
+	set = set_entity,
+	get = get_entity
+
 
 
 func set_entity(p_entity) -> void:

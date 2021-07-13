@@ -1,9 +1,9 @@
-extends "simulation_logic.gd"
-tool
+@tool
+extends "res://addons/entity_manager/simulation_logic.gd" # simulation_logic.gd
 
-var last_transform: Transform = Transform()
+var last_transform: Transform3D = Transform3D()
 
-func _network_transform_update(p_transform: Transform) -> void:
+func _network_transform_update(p_transform: Transform3D) -> void:
 	set_transform(p_transform, true)
 
 
@@ -23,32 +23,32 @@ func set_global_origin(p_origin: Vector3, _p_update_physics: bool = false) -> vo
 	entity_node.global_transform.origin = p_origin
 
 
-func get_transform() -> Transform:
+func get_transform() -> Transform3D:
 	return entity_node.transform
 
 
-func set_transform(p_transform: Transform, _p_update_physics: bool = false) -> void:
+func set_transform(p_transform: Transform3D, _p_update_physics: bool = false) -> void:
 	entity_node.transform = p_transform
 
 
-func get_global_transform() -> Transform:
+func get_global_transform() -> Transform3D:
 	return entity_node.global_transform
 
 
-func set_global_transform(p_global_transform: Transform, _p_update_physics: bool = false) -> void:
+func set_global_transform(p_global_transform: Transform3D, _p_update_physics: bool = false) -> void:
 	entity_node.global_transform = p_global_transform
 
 
-func get_last_transform() -> Transform:
+func get_last_transform() -> Transform3D:
 	return last_transform
 
 
-func _cache_last_transform(p_transform: Transform) -> void:
+func _cache_last_transform(p_transform: Transform3D) -> void:
 	last_transform = p_transform
 
 
 func _entity_physics_post_process(_delta: float) -> void:
-	._entity_physics_post_process(_delta)
+	super._entity_physics_post_process(_delta)
 	
 	_cache_last_transform(get_transform())
 

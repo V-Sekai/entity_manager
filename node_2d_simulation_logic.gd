@@ -1,5 +1,5 @@
-extends "simulation_logic.gd"
-tool
+@tool
+extends "res://addons/entity_manager/simulation_logic.gd" # simulation_logic.gd
 
 
 func get_global_position() -> Vector2:
@@ -31,8 +31,8 @@ func _on_transform_changed() -> void:
 
 
 func _entity_representation_process(p_delta: float) -> void:
-	._entity_representation_process(p_delta)
+	super._entity_representation_process(p_delta)
 
 
 func _entity_ready() -> void:
-	._entity_ready()
+	super._entity_ready()

@@ -1,9 +1,9 @@
-extends Node
-class_name ComponentNode
-tool
+@tool
+class_name ComponentNode extends Node
+
 
 var entity_node: Node = null
-export (NodePath) var _entity_node_path: NodePath = NodePath()
+@export  var _entity_node_path: NodePath # (NodePath) = NodePath()
 var nodes_cached: bool = false
 
 func nodes_are_cached() -> bool:
@@ -22,6 +22,6 @@ func cache_nodes() -> void:
 		entity_node = null
 
 
-func _threaded_instance_setup(_instance_id: int, _network_reader: Reference) -> void:
+func _threaded_instance_setup(_instance_id: int, _network_reader: RefCounted) -> void:
 	pass
 

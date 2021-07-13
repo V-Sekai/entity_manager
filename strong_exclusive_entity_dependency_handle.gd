@@ -1,6 +1,6 @@
-extends Reference
-class_name StrongExclusiveEntityDependencyHandle
-tool
+@tool
+class_name StrongExclusiveEntityDependencyHandle extends RefCounted
+
 
 var _entity_ref: EntityRef = null
 var _dependency: EntityRef = null

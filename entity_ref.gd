@@ -1,11 +1,11 @@
-extends Reference
-class_name EntityRef
-tool
+@tool
+class_name EntityRef extends RefCounted
+
 
 # Warning! Do not access this directly from another entity!
 var _entity: Node = null
 
-func _init(p_entity) -> void:
+func _init(p_entity):
 	_entity = p_entity
 
 func get_entity_type() -> String:

@@ -1,12 +1,12 @@
-extends Node
-class_name RuntimeEntity
-tool
+@tool
+class_name RuntimeEntity extends Node
+
 
 #const entity_manager_const = preload("entity_manager.gd")
 
-"""
-Dependency Graph
-"""
+## 
+## Dependency Graph
+## 
 
 var representation_process_ticks_usec: int = 0
 var physics_process_ticks_usec: int = 0
@@ -14,19 +14,19 @@ var physics_process_ticks_usec: int = 0
 const node_3d_simulation_logic_const = preload("node_3d_simulation_logic.gd")
 const node_2d_simulation_logic_const = preload("node_2d_simulation_logic.gd")
 
-const mutex_lock_const = preload("res://addons/gdutil/mutex_lock.gd")
+const mutex_lock_const = preload("res://addons/gd_util/mutex_lock.gd")
 
-var current_job: Reference = null
+var current_job: RefCounted = null
 var dependency_mutex: Mutex = Mutex.new()
 
 # TODO: this should be a a Set/Dictionary
 var strong_exclusive_dependencies: Dictionary = {}
 var strong_exclusive_dependents: Array = []
 
-enum DependencyCommand {
-	ADD_STRONG_EXCLUSIVE_DEPENDENCY,
-	REMOVE_STRONG_EXCLUSIVE_DEPENDENCY
-}
+class  DependencyCommand :
+	const ADD_STRONG_EXCLUSIVE_DEPENDENCY=0
+	const REMOVE_STRONG_EXCLUSIVE_DEPENDENCY=1
+
 
 var pending_dependency_commands: Array = []
 
@@ -34,73 +34,73 @@ var entity_ref: EntityRef = EntityRef.new(self)
 
 var nodes_cached: bool = false
 
-"""
-Parenting
-"""
+## 
+## Parenting
+## 
 
 signal entity_message(p_message, p_args)
 signal entity_deletion
 
-"""
-Entity Manager
-"""
+## 
+## Entity Manager
+## 
 var entity_manager: Node = null
 
-"""
-Transform Notification
-"""
+## 
+## Transform3D Notification
+## 
 var transform_notification_node_path: NodePath = NodePath()
 var transform_notification_node: Node = null
 
-"""
-Hierarchy Component Node
-"""
+## 
+## Hierarchy Component Node
+## 
 var hierarchy_component_node_path: NodePath = NodePath()
 var hierarchy_component_node: Node = null
 
-"""
-Simulation Logic Node
-"""
+## 
+## Simulation Logic Node
+## 
 var simulation_logic_node_path: NodePath = NodePath()
 var simulation_logic_node: Node = null
 
-"""
-Network Identity Node
-"""
+## 
+## Network Identity Node
+## 
 var network_identity_node_path: NodePath = NodePath()
 var network_identity_node: Node = null
 
-"""
-Network Logic Node
-"""
+## 
+## Network Logic Node
+## 
 var network_logic_node_path: NodePath = NodePath()
 var network_logic_node: Node = null
 
-"""
-RPC table Node
-"""
+## 
+## RPC table Node
+## 
 var rpc_table_node_path: NodePath = NodePath()
 var rpc_table_node: Node = null
 
-"""
-"""
+## 
+## 
 
 func clear_entity_signal_connections() -> void:
 	var entity_message_connections: Array = get_signal_connection_list("entity_message")
 	for connection in entity_message_connections:
-		disconnect(connection["signal"], connection["target"], connection["method"])
+		disconnect(connection["signal"], Callable(connection["target"], connection["method"]))
 	
 	var entity_deletion_connections: Array = get_signal_connection_list("entity_deletion")
 	for connection in entity_deletion_connections:
-		disconnect(connection["signal"], connection["target"], connection["method"])
+		disconnect(connection["signal"], Callable(connection["target"], connection["method"]))
 	
-func _create_strong_exclusive_dependency(p_entity_ref: Reference) -> void:
-	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
+func _create_strong_exclusive_dependency(p_entity_ref: RefCounted) -> void:
+	var _mutex_lock: RefCounted = mutex_lock_const.new(dependency_mutex)
 	pending_dependency_commands.push_back({"command":DependencyCommand.ADD_STRONG_EXCLUSIVE_DEPENDENCY, "entity":p_entity_ref})
 
 
-func _remove_strong_exclusive_dependency(p_entity_ref: Reference) -> void:
-	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(dependency_mutex)
+func _remove_strong_exclusive_dependency(p_entity_ref: RefCounted) -> void:
+	var _mutex_lock: RefCounted = mutex_lock_const.new(dependency_mutex)
 	pending_dependency_commands.push_back({"command":DependencyCommand.REMOVE_STRONG_EXCLUSIVE_DEPENDENCY, "entity":p_entity_ref})
 
 
@@ -113,7 +113,7 @@ func _update_dependencies() -> void:
 					if strong_exclusive_dependencies.has(entity):
 						strong_exclusive_dependencies[entity] += 1
 					else:
-						if EntityManager.check_if_dependency_is_cyclic(self, entity, true):
+						if EntityManagerFunctions.check_if_dependency_is_cyclic(self, entity, true):
 							printerr("Error: tried to create a cyclic dependency!")
 						else:
 							strong_exclusive_dependencies[entity] = 1
@@ -260,7 +260,7 @@ func get_entity() -> Node:
 	return self
 	
 	
-func get_entity_ref() -> Reference:
+func get_entity_ref() -> RefCounted:
 	return entity_ref
 
 
@@ -287,15 +287,15 @@ func can_transfer_master_from_session_master(p_id: int) -> bool:
 		return false
 
 
-func create_strong_exclusive_dependency_for(p_entity_ref: EntityRef) -> StrongExclusiveEntityDependencyHandle:
+func create_strong_exclusive_dependency_for(p_entity_ref: EntityRef):
 	return EntityManager.create_strong_dependency(p_entity_ref, get_entity_ref())
 
 
-func create_strong_exclusive_dependency_to(p_entity_ref: EntityRef) -> StrongExclusiveEntityDependencyHandle:
+func create_strong_exclusive_dependency_to(p_entity_ref: EntityRef):
 	return EntityManager.create_strong_dependency(get_entity_ref(), p_entity_ref)
 
 
-func get_dependent_entity(p_entity_ref: Reference) -> Node:
+func get_dependent_entity(p_entity_ref: RefCounted):
 	return EntityManager.get_dependent_entity_for_dependency(get_entity_ref(), p_entity_ref)
 
 
@@ -319,10 +319,10 @@ func get_last_transform():
 	simulation_logic_node is node_3d_simulation_logic_const:
 		return simulation_logic_node.get_last_transform()
 		
-	return Transform()
+	return Transform3D()
 
 
-func send_entity_message(p_target_entity: Reference, p_message: String, p_message_args: Dictionary) -> void:
+func send_entity_message(p_target_entity: RefCounted, p_message: String, p_message_args: Dictionary) -> void:
 	EntityManager.send_entity_message(get_entity_ref(), p_target_entity, p_message, p_message_args)
 
 
@@ -453,11 +453,11 @@ func _ready() -> void:
 		if entity_manager:
 			add_to_group("Entities")
 
-			if connect("ready", entity_manager, "_entity_ready", [self]) != OK:
+			if connect("ready", Callable(entity_manager, "_entity_ready"), [self]) != OK:
 				printerr("entity: ready could not be connected!")
 
 
-func _threaded_instance_setup(p_instance_id: int, p_network_reader: Reference) -> void:
+func _threaded_instance_setup(p_instance_id: int, p_network_reader: RefCounted) -> void:
 	_entity_cache()
 	
 	if simulation_logic_node:
