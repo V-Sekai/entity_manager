@@ -171,7 +171,7 @@ func _entity_ready() -> void:
 
 
 func _entity_representation_process(p_delta: float) -> void:
-	var start_ticks: int = OS.get_ticks_usec()
+	var start_ticks: int = Time.get_ticks_usec()
 				
 	if network_logic_node:
 		network_logic_node._entity_representation_process(p_delta)
@@ -182,7 +182,7 @@ func _entity_representation_process(p_delta: float) -> void:
 	else:
 		printerr("Missing simulation logic node!")
 		
-	representation_process_ticks_usec = OS.get_ticks_usec() - start_ticks
+	representation_process_ticks_usec = Time.get_ticks_usec() - start_ticks
 
 
 func _entity_physics_pre_process(p_delta) -> void:
@@ -193,7 +193,7 @@ func _entity_physics_pre_process(p_delta) -> void:
 
 
 func _entity_physics_process(p_delta: float) -> void:
-	var start_ticks: int = OS.get_ticks_usec()
+	var start_ticks: int = Time.get_ticks_usec()
 	
 	# Clear the job for next time the scheduler is run
 	current_job = null
@@ -207,7 +207,7 @@ func _entity_physics_process(p_delta: float) -> void:
 	else:
 		printerr("Missing simulation logic node!")
 		
-	physics_process_ticks_usec = OS.get_ticks_usec() - start_ticks
+	physics_process_ticks_usec = Time.get_ticks_usec() - start_ticks
 
 
 func _entity_kinematic_integration_callback(p_delta: float) -> void:

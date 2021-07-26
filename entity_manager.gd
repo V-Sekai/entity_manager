@@ -31,6 +31,12 @@ class EntityJob extends RefCounted:
 			return true
 		return false
 
+# hack
+func EntityJob_sort(a, b):
+	if a.overall_time_usec > b.overall_time_usec:
+		return true
+	return false
+
 
 var reparent_pending: Array = []
 var entity_reference_dictionary: Dictionary = {}
@@ -144,7 +150,7 @@ func _create_entity_update_jobs() -> Array:
 		if ! jobs.has(entity_job):
 			jobs.push_back(entity_job)
 			
-	jobs.sort_custom(EntityJob.sort)
+	jobs.sort_custom(EntityJob_sort)
 	return jobs
 
 
@@ -293,14 +299,14 @@ func _process_reparenting() -> void:
 
 
 func _process(p_delta: float) -> void:
-	#var scheduler_usec_start:int = OS.get_ticks_usec()
+	#var scheduler_usec_start:int = Time.get_ticks_usec()
 	#var jobs: Array = _create_entity_update_jobs()
-	#var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
+	#var scheduler_overall_time:int = Time.get_ticks_usec() - scheduler_usec_start
 	
-	var all_entities_representation_process_usec_start:int = OS.get_ticks_usec()
+	var all_entities_representation_process_usec_start:int = Time.get_ticks_usec()
 	for entity in get_all_entities():
 		entity._entity_representation_process(p_delta)
-	last_representation_process_usec = OS.get_ticks_usec() - all_entities_representation_process_usec_start
+	last_representation_process_usec = Time.get_ticks_usec() - all_entities_representation_process_usec_start
 	
 	emit_signal("process_complete", p_delta)
 
@@ -310,33 +316,33 @@ func _physics_process(p_delta: float) -> void:
 	
 	_process_reparenting()
 	
-	#var scheduler_usec_start:int = OS.get_ticks_usec()
+	#var scheduler_usec_start:int = Time.get_ticks_usec()
 	var jobs: Array = _create_entity_update_jobs()
-	#var scheduler_overall_time:int = OS.get_ticks_usec() - scheduler_usec_start
+	#var scheduler_overall_time:int = Time.get_ticks_usec() - scheduler_usec_start
 	
-	var entity_update_dependencies_usec_start: int = OS.get_ticks_usec()
+	var entity_update_dependencies_usec_start: int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
 		entity._update_dependencies()
-	last_update_dependencies_usec = OS.get_ticks_usec() - entity_update_dependencies_usec_start
+	last_update_dependencies_usec = Time.get_ticks_usec() - entity_update_dependencies_usec_start
 	
-	var entity_pre_physics_process_usec_start:int = OS.get_ticks_usec()
+	var entity_pre_physics_process_usec_start:int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
 		entity._entity_physics_pre_process(p_delta)
-	last_physics_pre_process_usec = OS.get_ticks_usec() - entity_pre_physics_process_usec_start
+	last_physics_pre_process_usec = Time.get_ticks_usec() - entity_pre_physics_process_usec_start
 	
-	var entity_physics_process_usec_start:int = OS.get_ticks_usec()
+	var entity_physics_process_usec_start:int = Time.get_ticks_usec()
 	for job in jobs:
 		for entity in job.entities:
 			entity._entity_physics_process(p_delta)
-	last_physics_process_usec = OS.get_ticks_usec() - entity_physics_process_usec_start
+	last_physics_process_usec = Time.get_ticks_usec() - entity_physics_process_usec_start
 	
 	for entity in entity_kinematic_integration_callbacks:
 		entity._entity_kinematic_integration_callback(p_delta)
 	
-	var entity_post_physics_process_usec_start:int = OS.get_ticks_usec()
+	var entity_post_physics_process_usec_start:int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
 		entity._entity_physics_post_process(p_delta)
-	last_physics_post_process_usec = OS.get_ticks_usec() - entity_post_physics_process_usec_start
+	last_physics_post_process_usec = Time.get_ticks_usec() - entity_post_physics_process_usec_start
 	
 	_process_reparenting()
 	
