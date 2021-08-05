@@ -70,21 +70,23 @@ func _get_property_list() -> Array:
 
 
 func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: String):
-	var variant = null
+	var variant: Variant = null
 	var node = get_node_or_null(p_path)
 	if node and node != self:
 		var property: String = sub_property_path(p_property, p_sub_node_name)
 		if property.substr(0, 1) != '_':
 			variant = node.get(property)
 			if typeof(variant) == TYPE_NODE_PATH:
-				if variant != "":
-					var sub_node: Node = node.get_node_or_null(variant)
+				var var_np: NodePath = variant
+				if var_np != NodePath():
+					var sub_node: Node = node.get_node_or_null(var_np)
 					if sub_node:
-						variant = get_path_to(sub_node)
+						var_np = get_path_to(sub_node)
 					else:
-						variant = NodePath()
+						var_np = NodePath()
 				else:
-					variant = NodePath()
+					var_np = NodePath()
+				variant = var_np
 	return variant
 
 
