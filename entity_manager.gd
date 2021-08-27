@@ -7,12 +7,17 @@ extends Node
 @export var last_physics_pre_process_usec: int # (int) = 0
 @export var last_update_dependencies_usec: int # (int) = 0
 
+var _NetworkManager: Node = null
+
+const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
+
 ##### BUG BUG BUG ###const scene_tree_execution_table_const = preload("scene_tree_execution_table.gd")
 var scene_tree_execution_table: Object
+var scene_tree_execution_table_const: Object
 
 func _init():
 	### BUG WORKAROUND
-	var scene_tree_execution_table_const = load("res://addons/entity_manager/scene_tree_execution_table.gd")
+	scene_tree_execution_table_const = load("res://addons/entity_manager/scene_tree_execution_table.gd")
 	scene_tree_execution_table = scene_tree_execution_table_const.new()
 
 class EntityJob extends RefCounted:
@@ -51,7 +56,9 @@ signal physics_process_complete(p_delta)
 
 # Returns the root node all network entities should parented to
 func get_entity_root_node() -> Node:
-	return NetworkManager.get_entity_root_node()
+	if _NetworkManager == null:
+		_NetworkManager = $"/root/NetworkManager"
+	return _NetworkManager.get_entity_root_node()
 
 
 # Dispatches a deferred add/remove entity command to the scene tree execution table 
@@ -221,7 +228,7 @@ func send_entity_message(p_source_entity: EntityRef, p_target_entity: EntityRef,
 static func create_entity_instance(
 	p_packed_scene: PackedScene,
 	p_name: String = "NetEntity",
-	p_master_id: int = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
 ) -> Node:
 	print_debug(
 		"Creating entity instantiate {name} of type {type}".format(
@@ -239,7 +246,7 @@ func instantiate_entity_and_setup(
 	p_packed_scene: PackedScene,
 	p_properties: Dictionary = {},
 	p_name: String = "NetEntity",
-	p_master_id: int = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
 ) -> Node:
 	var instantiate: Node = create_entity_instance(p_packed_scene, p_name, p_master_id)
 	
@@ -247,7 +254,9 @@ func instantiate_entity_and_setup(
 	for key in p_properties.keys():
 		instantiate.simulation_logic_node.set(key, p_properties[key])
 	
-	instantiate._threaded_instance_setup(NetworkManager.network_entity_manager.NULL_NETWORK_INSTANCE_ID, null)
+	if _NetworkManager == null:
+		_NetworkManager = $"/root/NetworkManager"
+	instantiate._threaded_instance_setup(_NetworkManager.network_entity_manager.NULL_NETWORK_INSTANCE_ID, null)
 	
 	return instantiate
 	
@@ -264,7 +273,7 @@ func spawn_entity(
 	p_packed_scene: PackedScene,
 	p_properties: Dictionary = {},
 	p_name: String = "NetEntity",
-	p_master_id: int = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
 ) -> EntityRef:
 	var instantiate: Node = instantiate_entity_and_setup(p_packed_scene, p_properties, p_name, p_master_id)
 	if instantiate:
@@ -305,7 +314,10 @@ func _process(p_delta: float) -> void:
 	
 	var all_entities_representation_process_usec_start:int = Time.get_ticks_usec()
 	for entity in get_all_entities():
-		entity._entity_representation_process(p_delta)
+		if entity == null:
+			push_error("Found a null entity in _process")
+		else:
+			entity._entity_representation_process(p_delta)
 	last_representation_process_usec = Time.get_ticks_usec() - all_entities_representation_process_usec_start
 	
 	emit_signal("process_complete", p_delta)

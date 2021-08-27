@@ -33,6 +33,7 @@ var pending_dependency_commands: Array = []
 var entity_ref: EntityRef = EntityRef.new(self)
 
 var nodes_cached: bool = false
+var _EntityManager: Node
 
 ## 
 ## Parenting
@@ -288,23 +289,23 @@ func can_transfer_master_from_session_master(p_id: int) -> bool:
 
 
 func create_strong_exclusive_dependency_for(p_entity_ref: EntityRef):
-	return EntityManager.create_strong_dependency(p_entity_ref, get_entity_ref())
+	return _EntityManager.create_strong_dependency(p_entity_ref, get_entity_ref())
 
 
 func create_strong_exclusive_dependency_to(p_entity_ref: EntityRef):
-	return EntityManager.create_strong_dependency(get_entity_ref(), p_entity_ref)
+	return _EntityManager.create_strong_dependency(get_entity_ref(), p_entity_ref)
 
 
 func get_dependent_entity(p_entity_ref: RefCounted):
-	return EntityManager.get_dependent_entity_for_dependency(get_entity_ref(), p_entity_ref)
+	return _EntityManager.get_dependent_entity_for_dependency(get_entity_ref(), p_entity_ref)
 
 
 func register_kinematic_integration_callback() -> void:
-	EntityManager.register_kinematic_integration_callback(self)
+	_EntityManager.register_kinematic_integration_callback(self)
 
 
 func unregister_kinematic_integration_callback() -> void:
-	EntityManager.unregister_kinematic_integration_callback(self)
+	_EntityManager.unregister_kinematic_integration_callback(self)
 
 
 func get_entity_type() -> String:
@@ -323,7 +324,7 @@ func get_last_transform():
 
 
 func send_entity_message(p_target_entity: RefCounted, p_message: String, p_message_args: Dictionary) -> void:
-	EntityManager.send_entity_message(get_entity_ref(), p_target_entity, p_message, p_message_args)
+	_EntityManager.send_entity_message(get_entity_ref(), p_target_entity, p_message, p_message_args)
 
 
 func _receive_entity_message(p_message: String, p_args: Dictionary) -> void:
@@ -449,11 +450,13 @@ func _notification(what) -> void:
 
 func _ready() -> void:
 	if ! Engine.is_editor_hint():
-		entity_manager = get_node_or_null("/root/EntityManager")
-		if entity_manager:
+		_EntityManager = $"/root/EntityManager"
+		if _EntityManager == null:
+			push_error(str(self) + " failed to find EntityManager!")
+		if _EntityManager:
 			add_to_group("Entities")
 
-			if connect("ready", Callable(entity_manager, "_entity_ready"), [self]) != OK:
+			if connect("ready", _EntityManager._entity_ready, [self]) != OK:
 				printerr("entity: ready could not be connected!")
 
 
