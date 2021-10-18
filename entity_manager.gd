@@ -237,7 +237,7 @@ static func create_entity_instance(
 	)
 	var instantiate: Node = p_packed_scene.instantiate()
 	instantiate.set_name(p_name)
-	instantiate.set_network_master(p_master_id)
+	instantiate.set_multiplayer_authority(p_master_id)
 
 	return instantiate
 

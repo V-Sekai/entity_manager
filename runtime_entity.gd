@@ -139,7 +139,7 @@ func request_to_become_master() -> void:
 
 
 func process_master_request(p_id: int) -> void:
-	set_network_master(p_id)
+	set_multiplayer_authority(p_id)
 
 
 func _entity_about_to_add() -> void:

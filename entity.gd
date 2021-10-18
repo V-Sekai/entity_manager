@@ -21,7 +21,7 @@ func is_root_entity() -> bool:
 	if ProjectSettings.has_setting("network/config/networked_scenes"):
 		networked_scenes = ProjectSettings.get_setting("network/config/networked_scenes")
 	
-	if get_owner() == null and networked_scenes.find(get_filename()) != -1:
+	if get_owner() == null and networked_scenes.find(get_scene_file_path()) != -1:
 		return true
 	
 	return false
@@ -31,7 +31,7 @@ func is_subnode_property_valid() -> bool:
 		return true
 	else:
 		return (
-			filename != ""
+			scene_file_path != ""
 			or (
 				is_inside_tree()
 				and get_tree().edited_scene_root
