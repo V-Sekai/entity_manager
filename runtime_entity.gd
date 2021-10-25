@@ -133,8 +133,8 @@ func _update_dependencies() -> void:
 
 
 func request_to_become_master() -> void:
-	NetworkManager.network_replication_manager.request_to_become_master(
-		network_identity_node.network_instance_id, self, NetworkManager.get_current_peer_id()
+	$"/root/NetworkManager".network_replication_manager.request_to_become_master(
+		network_identity_node.network_instance_id, self, $"/root/NetworkManager".get_current_peer_id()
 	)
 
 
