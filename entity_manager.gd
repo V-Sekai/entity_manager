@@ -68,11 +68,13 @@ func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 
 
 func _add_entity(p_entity: Node) -> void:
+	print("Adding: " + str(p_entity))
 	assert(!entity_reference_dictionary.has(p_entity))
 	entity_reference_dictionary[p_entity.get_entity_ref()] = p_entity
 
 
 func _remove_entity(p_entity: Node) -> void:
+	print("Removing: " + str(p_entity))
 	if entity_reference_dictionary.has(p_entity.get_entity_ref()):
 		assert(entity_reference_dictionary.erase(p_entity.get_entity_ref()))
 	if entity_kinematic_integration_callbacks.has(p_entity):
@@ -91,8 +93,9 @@ func _delete_entity_unsafe(p_entity: Node) -> void:
 
 func get_all_entities() -> Array:
 	var return_array: Array = []
-	
 	for entity in entity_reference_dictionary.values():
+		if entity == null:
+			continue
 		return_array.push_back(entity)
 		
 	return return_array
@@ -153,6 +156,8 @@ func _create_entity_update_jobs() -> Array:
 	var jobs: Array = []
 	var pending_entities: Array = entity_reference_dictionary.values()
 	for entity in pending_entities:
+		if entity == null:
+			continue
 		var entity_job: EntityJob = _get_job_for_entity(entity)
 		if ! jobs.has(entity_job):
 			jobs.push_back(entity_job)
@@ -334,11 +339,15 @@ func _physics_process(p_delta: float) -> void:
 	
 	var entity_update_dependencies_usec_start: int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
+		if entity == null:
+			continue
 		entity._update_dependencies()
 	last_update_dependencies_usec = Time.get_ticks_usec() - entity_update_dependencies_usec_start
 	
 	var entity_pre_physics_process_usec_start:int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
+		if entity == null:
+			continue
 		entity._entity_physics_pre_process(p_delta)
 	last_physics_pre_process_usec = Time.get_ticks_usec() - entity_pre_physics_process_usec_start
 	
@@ -353,6 +362,8 @@ func _physics_process(p_delta: float) -> void:
 	
 	var entity_post_physics_process_usec_start:int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
+		if entity == null:
+			continue
 		entity._entity_physics_post_process(p_delta)
 	last_physics_post_process_usec = Time.get_ticks_usec() - entity_post_physics_process_usec_start
 	
