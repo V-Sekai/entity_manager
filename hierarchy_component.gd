@@ -33,7 +33,6 @@ func set_pending_parent_entity(p_entity_parent_ref: EntityRef, p_attachment_id: 
 func request_reparent_entity(p_entity_parent_ref: EntityRef, p_attachment_id: int) -> void:
 	if set_pending_parent_entity(p_entity_parent_ref, p_attachment_id):
 		if is_inside_tree():
-			var entity_node: Entity = get_entity_node()
 			if ! EntityManager.reparent_pending.has(entity_node):
 				EntityManager.reparent_pending.push_back(entity_node)
 
