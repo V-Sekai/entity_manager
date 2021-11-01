@@ -43,9 +43,9 @@ func _ready():
 		_cache_entity_parent()
 		var entity_parent: Node = get_entity_parent()
 		if entity_parent:
-			var entity_node: Entity = get_entity_node()
+			var current_entity_node: Entity = get_entity_node()
 			pending_entity_parent_ref = entity_parent.get_entity_ref()
-			entity_parent.hierarchy_component_node.cached_entity_children.push_back(entity_node)
+			entity_parent.hierarchy_component_node.cached_entity_children.push_back(current_entity_node)
 			
 		emit_signal("entity_parent_changed")
 
@@ -56,5 +56,5 @@ func _exit_tree() -> void:
 	if ! Engine.is_editor_hint():
 		var entity_parent: Node = get_entity_parent()
 		if entity_parent:
-			var entity_node: Entity = get_entity_node()
-			entity_parent.hierarchy_component_node.cached_entity_children.erase(entity_node)
+			var current_entity_node: Entity = get_entity_node()
+			entity_parent.hierarchy_component_node.cached_entity_children.erase(current_entity_node)
