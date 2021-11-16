@@ -50,50 +50,60 @@ var entity_manager: Node = null
 ## 
 ## Transform3D Notification
 ## 
-var transform_notification_node_path: NodePath = NodePath()
+@export var transform_notification_node_path: NodePath = NodePath()
 var transform_notification_node: Node = null
 
 ## 
 ## Hierarchy Component Node
 ## 
-var hierarchy_component_node_path: NodePath = NodePath()
+@export var hierarchy_component_node_path: NodePath = NodePath()
 var hierarchy_component_node: Node = null
 
 ## 
 ## Simulation Logic Node
 ## 
-var simulation_logic_node_path: NodePath = NodePath()
+@export var simulation_logic_node_path: NodePath = NodePath()
 var simulation_logic_node: Node = null
 
 ## 
 ## Network Identity Node
 ## 
-var network_identity_node_path: NodePath = NodePath()
+@export var network_identity_node_path: NodePath = NodePath()
 var network_identity_node: Node = null
 
 ## 
 ## Network Logic Node
 ## 
-var network_logic_node_path: NodePath = NodePath()
+@export var network_logic_node_path: NodePath = NodePath()
 var network_logic_node: Node = null
 
 ## 
 ## RPC table Node
 ## 
-var rpc_table_node_path: NodePath = NodePath()
+@export var rpc_table_node_path: NodePath = NodePath()
 var rpc_table_node: Node = null
 
 ## 
-## 
+##
+
+# Missing from Godot docuementation 
+# Object::Connection::operator Variant() const {
+#        Dictionary d;
+#        d["signal"] = signal;
+#        d["callable"] = callable;
+#        d["flags"] = flags;
+#        d["binds"] = binds;
+#        return d;
+#}
 
 func clear_entity_signal_connections() -> void:
 	var entity_message_connections: Array = get_signal_connection_list("entity_message")
 	for connection in entity_message_connections:
-		disconnect(connection["signal"], Callable(connection["target"], connection["method"]))
+		connection["signal"].disconnect(connection["callable"])
 	
 	var entity_deletion_connections: Array = get_signal_connection_list("entity_deletion")
 	for connection in entity_deletion_connections:
-		disconnect(connection["signal"], Callable(connection["target"], connection["method"]))
+		connection["signal"].disconnect(connection["callable"])
 	
 func _create_strong_exclusive_dependency(p_entity_ref: RefCounted) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(dependency_mutex)

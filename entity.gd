@@ -81,7 +81,7 @@ func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: Str
 				if var_np != NodePath():
 					var sub_node: Node = node.get_node_or_null(var_np)
 					if sub_node:
-						var_np = get_path_to(sub_node)
+						var_np = node.get_path_to(sub_node)
 					else:
 						var_np = NodePath()
 				else:
@@ -90,22 +90,26 @@ func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: Str
 	return variant
 
 
-func set_sub_property(p_path: NodePath, p_property: String, p_value, p_sub_node_name: String) -> Variant:
+func set_sub_property(p_path: NodePath, p_property: String, p_value, p_sub_node_name: String) -> bool:
 	var node = get_node_or_null(p_path)
 	if node != null and node != self:
 		var property: String = sub_property_path(p_property, p_sub_node_name)
 		if property.substr(0, 1) != '_':
 			var variant = p_value
 			if typeof(variant) == TYPE_NODE_PATH:
-				if variant != "":
+				if variant != NodePath():
 					var sub_node = get_node_or_null(variant)
 					if sub_node:
-						return node.set(property, node.get_path_to(sub_node))
+						node.set(property, node.get_path_to(sub_node))
+						return false # NO IDEA
 					else:
-						return node.set(property, NodePath())
+						node.set(property, NodePath())
+						return false # NO IDEA
 				else:
-					return node.set(property, NodePath())
-			return node.set(property, variant)
+					node.set(property, NodePath())
+					return false # NO IDEA
+			node.set(property, variant)
+			return false # NO IDEA
 	return false
 
 
