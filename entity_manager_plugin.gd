@@ -2,7 +2,7 @@
 extends EditorPlugin
 
 var editor_interface: EditorInterface = null
-
+const entity_const = preload("entity.gd")
 
 func _init():
 	print("Initialising EntityManager plugin")
@@ -24,15 +24,15 @@ func _enter_tree() -> void:
 	add_autoload_singleton("EntityManager", "res://addons/entity_manager/entity_manager.gd")
 
 	add_custom_type(
-		"SpatialEntity",
+		"Node3DEntity",
 		"Node3D",
-		load("entity.gd"),
+		entity_const,
 		editor_interface.get_base_control().get_theme_icon("Node3D", "EditorIcons")
 	)
 	add_custom_type(
 		"Node2DEntity",
 		"Node2D",
-		load("entity.gd"),
+		entity_const,
 		editor_interface.get_base_control().get_theme_icon("Node2D", "EditorIcons")
 	)
 
