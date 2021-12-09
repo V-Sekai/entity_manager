@@ -3,6 +3,7 @@ class_name SimulationLogic extends "res://addons/entity_manager/component_node.g
 
 
 # Static value, do not edit at runtime
+# warning-ignore:unused_private_class_variable
 @export var _entity_type: String # (String) = ""
 
 func _enter_tree() -> void:
@@ -41,7 +42,7 @@ func _entity_parent_changed() -> void:
 
 
 func is_entity_master() -> bool:
-	if ! get_tree().multiplayer.has_multiplayer_peer():
+	if get_tree() != null and ! get_tree().multiplayer.has_multiplayer_peer():
 		return true
 	else:
 		if is_multiplayer_authority():
