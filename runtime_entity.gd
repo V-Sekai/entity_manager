@@ -96,6 +96,19 @@ var rpc_table_node: Node = null
 #        return d;
 #}
 
+static func get_custom_logic_node_properties(p_node : Node) -> Array:
+	var properties: Array = []
+	var node_property_list: Array = p_node.get_property_list()
+	for property in node_property_list:
+		if (
+			property["usage"] & PROPERTY_USAGE_EDITOR
+			and property["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE
+		):
+			if property["name"].substr(0, 1) != '_':
+				properties.push_back(property)
+				
+	return properties
+
 func clear_entity_signal_connections() -> void:
 	var entity_message_connections: Array = get_signal_connection_list("entity_message")
 	for connection in entity_message_connections:

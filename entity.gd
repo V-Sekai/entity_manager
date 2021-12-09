@@ -1,19 +1,8 @@
 @tool
-class_name Entity extends "res://addons/entity_manager/runtime_entity.gd" # runtime_entity.gd
+extends "res://addons/entity_manager/runtime_entity.gd" # runtime_entity.gd
+class_name Entity
 
-
-static func get_logic_node_properties(p_node : Node) -> Array:
-	var properties: Array = []
-	var node_property_list: Array = p_node.get_property_list()
-	for property in node_property_list:
-		if (
-			property["usage"] & PROPERTY_USAGE_EDITOR
-			and property["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE
-		):
-			if property["name"].substr(0, 1) != '_':
-				properties.push_back(property)
-				
-	return properties
+const runtime_entity_const = preload("runtime_entity.gd")
 
 func is_root_entity() -> bool:
 	var networked_scenes: Array = []
@@ -59,7 +48,7 @@ func _get_property_list() -> Array:
 			var node: Node = get_node_or_null(simulation_logic_node_path)
 			if node and node != self:
 				if is_subnode_property_valid():
-					var logic_node_properties : Array = get_logic_node_properties(node)
+					var logic_node_properties : Array = runtime_entity_const.get_custom_logic_node_properties(node)
 					for property in logic_node_properties:
 						property["name"] = "simulation_logic_node/%s" % property["name"]
 						properties.push_back(property)
