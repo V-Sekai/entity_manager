@@ -4,21 +4,8 @@ extends EditorPlugin
 var editor_interface: EditorInterface = null
 const entity_const = preload("entity.gd")
 
-func _init():
+func _enable_plugin():
 	print("Initialising EntityManager plugin")
-
-
-func _notification(p_notification: int):
-	match p_notification:
-		NOTIFICATION_PREDELETE:
-			print("Destroying EntityManager plugin")
-
-
-func _get_plugin_name() -> String:
-	return "EntityManager"
-
-
-func _enter_tree() -> void:
 	editor_interface = get_editor_interface()
 
 	add_autoload_singleton("EntityManager", "res://addons/entity_manager/entity_manager.gd")
@@ -37,7 +24,18 @@ func _enter_tree() -> void:
 	)
 
 
-func _exit_tree() -> void:
+
+func _notification(p_notification: int):
+	match p_notification:
+		NOTIFICATION_PREDELETE:
+			print("Destroying EntityManager plugin")
+
+
+func _get_plugin_name() -> String:
+	return "EntityManager"
+
+
+func _disable_plugin() -> void:
 	remove_custom_type("SpatialEntity")
 	remove_custom_type("Node2DEntity")
 
