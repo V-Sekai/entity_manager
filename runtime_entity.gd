@@ -1,9 +1,6 @@
 @tool
 class_name RuntimeEntity extends Node
 
-
-#const entity_manager_const = preload("entity_manager.gd")
-
 ## 
 ## Dependency Graph
 ## 
