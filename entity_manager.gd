@@ -1,11 +1,11 @@
 @tool
 extends Node
 
-@export var last_representation_process_usec: int # (int) = 0
-@export var last_physics_process_usec: int # (int) = 0
-@export var last_physics_post_process_usec: int # (int) = 0
-@export var last_physics_pre_process_usec: int # (int) = 0
-@export var last_update_dependencies_usec: int # (int) = 0
+@export var last_representation_process_usec: int = 0
+@export var last_physics_process_usec: int = 0
+@export var last_physics_post_process_usec: int = 0
+@export var last_physics_pre_process_usec: int = 0
+@export var last_update_dependencies_usec: int = 0
 
 var _NetworkManager: Node = null
 

@@ -4,7 +4,7 @@ class_name SimulationLogic extends "res://addons/entity_manager/component_node.g
 
 # Static value, do not edit at runtime
 # warning-ignore:unused_private_class_variable
-@export var _entity_type: String # (String) = ""
+@export var _entity_type: String = ""
 
 func _enter_tree() -> void:
 	if ! Engine.is_editor_hint():

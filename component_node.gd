@@ -3,7 +3,7 @@ class_name ComponentNode extends Node
 
 
 var entity_node: Node = null
-@export  var _entity_node_path: NodePath # (NodePath) = NodePath()
+@export var _entity_node_path: NodePath = NodePath()
 var nodes_cached: bool = false
 
 func nodes_are_cached() -> bool:
