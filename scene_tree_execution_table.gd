@@ -29,9 +29,9 @@ func _add_entity_instance_unsafe(p_instance: Node) -> void:
 		if pending_entity_parent_ref:
 			var entity: RuntimeEntity = pending_entity_parent_ref._entity
 			var attachment_node: Node = entity.get_attachment_node(p_instance.pending_attachment_id)
-			attachment_node.add_child(p_instance)
+			attachment_node.add_child(p_instance, true)
 		else:
-			root_node.add_child(p_instance)
+			root_node.add_child(p_instance, true)
 
 
 # Deletes an entity to the tree. Called exclusively in the main thread

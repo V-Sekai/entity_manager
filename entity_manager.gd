@@ -299,10 +299,10 @@ func _reparent_unsafe(p_entity: Node, p_entity_parent_ref: EntityRef, p_attachme
 		var attachment_node = p_entity_parent_ref._entity.get_attachment_node(p_attachment_id)
 		var relative_transform = attachment_node.get_global_transform().affine_inverse() * global_transform
 		p_entity.set_transform(relative_transform)
-		attachment_node.add_child(p_entity)
+		attachment_node.add_child(p_entity, true)
 	else:
 		p_entity.set_transform(global_transform)
-		get_entity_root_node().add_child(p_entity)
+		get_entity_root_node().add_child(p_entity, true)
 
 
 func _process_reparenting() -> void:
