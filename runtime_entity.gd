@@ -423,7 +423,7 @@ func _get_property_list() -> Array:
 	return properties
 
 
-func _get(p_property: String):
+func _get(p_property: StringName):
 	match p_property:
 		"transform_notification_node_path":
 			return transform_notification_node_path
@@ -438,7 +438,7 @@ func _get(p_property: String):
 		"rpc_table_node_path":
 			return rpc_table_node_path
 
-func _set(p_property: String, p_value) -> bool:
+func _set(p_property: StringName, p_value) -> bool:
 	match p_property:
 		"transform_notification_node_path":
 			transform_notification_node_path = p_value
