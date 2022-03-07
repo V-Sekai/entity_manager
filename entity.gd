@@ -102,7 +102,7 @@ func set_sub_property(p_path: NodePath, p_property: String, p_value, p_sub_node_
 	return false
 
 
-func _get(p_property: String):
+func _get(p_property: StringName):
 	if Engine.is_editor_hint():
 		var variant = null
 		if simulation_logic_node_path != NodePath() and is_subnode_property_valid():
@@ -112,7 +112,7 @@ func _get(p_property: String):
 		return super._get(p_property)
 
 
-func _set(p_property: String, p_value) -> bool:
+func _set(p_property: StringName, p_value) -> bool:
 	if Engine.is_editor_hint():
 		var return_val: bool = false
 		if simulation_logic_node_path != NodePath() and is_subnode_property_valid():
