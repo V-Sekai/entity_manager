@@ -286,7 +286,7 @@ func get_entity_ref() -> RefCounted:
 
 
 func _entity_deletion() -> void:
-	emit_signal("entity_deletion")
+	entity_deletion.emit()
 	for dependent in strong_exclusive_dependents:
 		dependent.strong_exclusive_dependencies.erase(self)
 		
@@ -348,7 +348,7 @@ func send_entity_message(p_target_entity: RefCounted, p_message: String, p_messa
 
 
 func _receive_entity_message(p_message: String, p_args: Dictionary) -> void:
-	emit_signal("entity_message", p_message, p_args)
+	entity_message.emit(p_message, p_args)
 
 
 static func get_entity_properties(p_show_properties: bool) -> Array:
@@ -476,7 +476,7 @@ func _ready() -> void:
 		if _EntityManager:
 			add_to_group("Entities")
 
-			if connect("ready", _EntityManager._entity_ready, [self]) != OK:
+			if self.ready.connect(_EntityManager._entity_ready.bind(self)) != OK:
 				printerr("entity: ready could not be connected!")
 
 

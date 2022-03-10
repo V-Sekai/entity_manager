@@ -47,7 +47,7 @@ func _ready():
 			pending_entity_parent_ref = entity_parent.get_entity_ref()
 			entity_parent.hierarchy_component_node.cached_entity_children.push_back(current_entity_node)
 			
-		emit_signal("entity_parent_changed")
+		entity_parent_changed.emit()
 
 func _enter_tree():
 	request_ready()

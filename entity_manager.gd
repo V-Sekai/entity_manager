@@ -101,32 +101,32 @@ func get_all_entities() -> Array:
 	return return_array
 
 
-func register_kinematic_integration_callback(p_entity: Node) -> void: # RuntimeEntity
+func register_kinematic_integration_callback(p_entity: RuntimeEntity) -> void:
 	if ! entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.push_back(p_entity)
 	else:
 		printerr("Attempted to add duplicate kinematic integration callback")
 
 
-func unregister_kinematic_integration_callback(p_entity: Node) -> void: # RuntimeEntity
+func unregister_kinematic_integration_callback(p_entity: RuntimeEntity) -> void:
 	if entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.erase(p_entity)
 	else:
 		printerr("Attempted to remove invalid kinematic integration callback")
 
 
-func _entity_ready(p_entity: Node) -> void: # RuntimeEntity
+func _entity_ready(p_entity: RuntimeEntity) -> void:
 	_add_entity(p_entity)
-	emit_signal("entity_added", p_entity)
+	entity_added.emit(p_entity)
 	p_entity._entity_ready()
 
 
-func _entity_deleting(p_entity: Node) -> void: # RuntimeEntity
+func _entity_deleting(p_entity: RuntimeEntity) -> void:
 	_remove_entity(p_entity)
-	emit_signal("entity_removed", p_entity)
+	entity_removed.emit(p_entity)
 
 
-static func _has_immediate_dependency_link(p_dependent_entity: Node, p_dependency_entity: Node) -> bool: # RuntimeEntity
+static func _has_immediate_dependency_link(p_dependent_entity: Node, p_dependency_entity: RuntimeEntity) -> bool:
 	if p_dependent_entity.strong_exclusive_dependencies.has(p_dependency_entity):
 		return true
 			
@@ -325,7 +325,7 @@ func _process(p_delta: float) -> void:
 			entity._entity_representation_process(p_delta)
 	last_representation_process_usec = Time.get_ticks_usec() - all_entities_representation_process_usec_start
 	
-	emit_signal("process_complete", p_delta)
+	process_complete.emit(p_delta)
 
 
 func _physics_process(p_delta: float) -> void:
@@ -369,7 +369,7 @@ func _physics_process(p_delta: float) -> void:
 	
 	_process_reparenting()
 	
-	emit_signal("physics_process_complete", p_delta)
+	physics_process_complete.emit(p_delta)
 
 
 func apply_project_settings() -> void:
