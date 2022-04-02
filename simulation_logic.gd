@@ -2,9 +2,14 @@
 class_name SimulationLogic extends "res://addons/entity_manager/component_node.gd" # component_node.gd
 
 
-# Static value, do not edit at runtime
-# warning-ignore:unused_private_class_variable
-@export var _entity_type: String = ""
+# Static value, do not edit at runtimes
+@export var _entity_type: String
+
+func get_entity_type() -> String:
+	if not _entity_type.is_empty():
+		return _entity_type
+	else:
+		return "Unknown Entity Type"
 
 func _enter_tree() -> void:
 	if ! Engine.is_editor_hint():
