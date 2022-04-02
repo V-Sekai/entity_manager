@@ -358,6 +358,8 @@ func _physics_process(p_delta: float) -> void:
 	last_physics_process_usec = Time.get_ticks_usec() - entity_physics_process_usec_start
 	
 	for entity in entity_kinematic_integration_callbacks:
+		if not entity:
+			continue
 		entity._entity_kinematic_integration_callback(p_delta)
 	
 	var entity_post_physics_process_usec_start:int = Time.get_ticks_usec()
