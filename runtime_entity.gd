@@ -172,7 +172,7 @@ func _entity_ready() -> void:
 	_entity_cache()
 	
 	if ! Engine.is_editor_hint():
-		if simulation_logic_node:
+		if simulation_logic_node and simulation_logic_node.has_method("_entity_ready"):
 			simulation_logic_node._entity_ready()
 		else:
 			printerr("Missing simulation logic node!")
@@ -197,7 +197,7 @@ func _entity_representation_process(p_delta: float) -> void:
 		network_logic_node._entity_representation_process(p_delta)
 	else:
 		printerr("Missing network logic node")
-	if simulation_logic_node:
+	if simulation_logic_node and simulation_logic_node.has_method("_entity_representation_process"):
 		simulation_logic_node._entity_representation_process(p_delta)
 	else:
 		printerr("Missing simulation logic node!")
@@ -206,7 +206,7 @@ func _entity_representation_process(p_delta: float) -> void:
 
 
 func _entity_physics_pre_process(p_delta) -> void:
-	if simulation_logic_node:
+	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_pre_process"):
 		simulation_logic_node._entity_physics_pre_process(p_delta)
 	else:
 		printerr("Missing simulation logic node!")
@@ -222,7 +222,7 @@ func _entity_physics_process(p_delta: float) -> void:
 		network_logic_node._entity_physics_process(p_delta)
 	else:
 		printerr("Missing network logic node")
-	if simulation_logic_node:
+	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_process"):
 		simulation_logic_node._entity_physics_process(p_delta)
 	else:
 		printerr("Missing simulation logic node!")
@@ -238,7 +238,7 @@ func _entity_kinematic_integration_callback(p_delta: float) -> void:
 
 
 func _entity_physics_post_process(p_delta) -> void:
-	if simulation_logic_node:
+	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_post_process"):
 		simulation_logic_node._entity_physics_post_process(p_delta)
 
 
