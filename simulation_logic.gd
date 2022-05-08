@@ -47,7 +47,7 @@ func _entity_parent_changed() -> void:
 
 
 func is_entity_master() -> bool:
-	if get_tree() != null and ! get_tree().multiplayer.has_multiplayer_peer():
+	if get_tree() != null and ! get_tree().get_multiplayer().has_multiplayer_peer():
 		return true
 	else:
 		if is_inside_tree() and is_multiplayer_authority():
