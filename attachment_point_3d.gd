@@ -5,7 +5,6 @@ var entity: Node = null :
 	get = get_entity
 
 
-
 func set_entity(p_entity) -> void:
 	entity = p_entity
 

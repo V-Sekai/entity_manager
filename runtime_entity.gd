@@ -16,7 +16,6 @@ const mutex_lock_const = preload("res://addons/gd_util/mutex_lock.gd")
 var current_job: RefCounted = null
 var dependency_mutex: Mutex = Mutex.new()
 
-# TODO: this should be a a Set/Dictionary
 var strong_exclusive_dependencies: Dictionary = {}
 var strong_exclusive_dependents: Array = []
 
