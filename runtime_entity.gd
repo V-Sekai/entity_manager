@@ -234,7 +234,7 @@ func _entity_kinematic_integration_callback(p_delta: float) -> void:
 	if simulation_logic_node:
 		simulation_logic_node._entity_kinematic_integration_callback(p_delta)
 	else:
-		printerr("Missing simulation logic node!")
+		printerr("_entity_kinematic_integration_callback is missing simulation logic node!")
 
 
 func _entity_physics_post_process(p_delta) -> void:
@@ -412,9 +412,11 @@ func get_rpc_table() -> Node:
 	return rpc_table_node
 
 func _entity_cache() -> void:
-	if ! nodes_cached:
-		propagate_call("cache_nodes", [], true)
-		nodes_cached = true
+# TODO: fire 2022-05-31 Restore entity caching.
+	pass
+#	if ! nodes_cached:
+#		propagate_call("cache_nodes", [], true)
+#		nodes_cached = true
 
 
 func _get_property_list() -> Array:
@@ -476,7 +478,7 @@ func _ready() -> void:
 			add_to_group("Entities")
 
 			if self.ready.connect(_EntityManager._entity_ready.bind(self)) != OK:
-				printerr("entity: ready could not be connected!")
+				printerr("entity: _ready could not be connected!")
 
 
 func _threaded_instance_setup(p_instance_id: int, p_network_reader: RefCounted) -> void:
