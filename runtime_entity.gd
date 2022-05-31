@@ -412,11 +412,9 @@ func get_rpc_table() -> Node:
 	return rpc_table_node
 
 func _entity_cache() -> void:
-# TODO: fire 2022-05-31 Restore entity caching.
-	pass
-#	if ! nodes_cached:
-#		propagate_call("cache_nodes", [], true)
-#		nodes_cached = true
+	if not nodes_cached:
+		propagate_call("cache_nodes", [], true)
+		nodes_cached = true
 
 
 func _get_property_list() -> Array:
