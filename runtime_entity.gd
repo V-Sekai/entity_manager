@@ -165,7 +165,7 @@ func _entity_about_to_add() -> void:
 	if network_logic_node:
 		network_logic_node._entity_about_to_add()
 	else:
-		printerr("Missing network logic node")
+		printerr("_entity_about_to_add missing network logic node")
 			
 
 func _entity_ready() -> void:
@@ -175,7 +175,7 @@ func _entity_ready() -> void:
 		if simulation_logic_node and simulation_logic_node.has_method("_entity_ready"):
 			simulation_logic_node._entity_ready()
 		else:
-			printerr("Missing simulation logic node!")
+			printerr("_entity_ready is missing simulation logic node!")
 			
 		if network_identity_node:
 			network_identity_node._entity_ready()
@@ -185,7 +185,7 @@ func _entity_ready() -> void:
 		if network_logic_node:
 			network_logic_node._entity_ready()
 		else:
-			printerr("Missing network logic node")
+			printerr("_entity_ready is missing network logic node")
 			
 		network_identity_node.update_name()
 
@@ -196,11 +196,11 @@ func _entity_representation_process(p_delta: float) -> void:
 	if network_logic_node:
 		network_logic_node._entity_representation_process(p_delta)
 	else:
-		printerr("Missing network logic node")
+		printerr("_entity_representation_process is missing network logic node")
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_representation_process"):
 		simulation_logic_node._entity_representation_process(p_delta)
 	else:
-		printerr("Missing simulation logic node!")
+		printerr("_entity_representation_process is missing simulation logic node!")
 		
 	representation_process_ticks_usec = Time.get_ticks_usec() - start_ticks
 
@@ -209,7 +209,7 @@ func _entity_physics_pre_process(p_delta) -> void:
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_pre_process"):
 		simulation_logic_node._entity_physics_pre_process(p_delta)
 	else:
-		printerr("Missing simulation logic node!")
+		printerr("_entity_physics_pre_process is missing simulation logic node!")
 
 
 func _entity_physics_process(p_delta: float) -> void:
@@ -221,7 +221,7 @@ func _entity_physics_process(p_delta: float) -> void:
 	if network_logic_node:
 		network_logic_node._entity_physics_process(p_delta)
 	else:
-		printerr("Missing network logic node")
+		printerr("_entity_physics_process is missing network logic node")
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_process"):
 		simulation_logic_node._entity_physics_process(p_delta)
 	else:
