@@ -20,7 +20,7 @@ func is_subnode_property_valid() -> bool:
 		return true
 	else:
 		return (
-			scene_file_path != ""
+			not scene_file_path.is_empty()
 			or (
 				is_inside_tree()
 				and get_tree().edited_scene_root
