@@ -418,7 +418,7 @@ func _entity_cache() -> void:
 
 
 func _get_property_list() -> Array:
-	var properties: Array = get_entity_properties(is_root_entity())
+	var properties: Array = RuntimeEntity.get_entity_properties(is_root_entity())
 	return properties
 
 

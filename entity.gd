@@ -62,7 +62,7 @@ func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: Str
 	var variant: Variant = null
 	var node = get_node_or_null(p_path)
 	if node and node != self:
-		var property: String = sub_property_path(p_property, p_sub_node_name)
+		var property: String = Entity.sub_property_path(p_property, p_sub_node_name)
 		if property.substr(0, 1) != '_':
 			variant = node.get(property)
 			if typeof(variant) == TYPE_NODE_PATH:
@@ -82,7 +82,7 @@ func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: Str
 func set_sub_property(p_path: NodePath, p_property: String, p_value, p_sub_node_name: String) -> bool:
 	var node = get_node_or_null(p_path)
 	if node != null and node != self:
-		var property: String = sub_property_path(p_property, p_sub_node_name)
+		var property: String = Entity.sub_property_path(p_property, p_sub_node_name)
 		if property.substr(0, 1) != '_':
 			var variant = p_value
 			if typeof(variant) == TYPE_NODE_PATH:

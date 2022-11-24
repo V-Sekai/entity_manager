@@ -2,7 +2,7 @@
 extends EditorPlugin
 
 var editor_interface: EditorInterface = null
-const entity_const = preload("entity.gd")
+const entity_const = preload("res://addons/entity_manager/entity.gd")
 
 func _init():
 	print("Initialising EntityManager plugin")

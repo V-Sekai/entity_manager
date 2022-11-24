@@ -10,6 +10,7 @@ extends Node
 var _NetworkManager: Node = null
 
 const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
+const entity_manager_const = preload("res://addons/entity_manager/entity_manager.gd")
 
 ##### BUG BUG BUG ###const scene_tree_execution_table_const = preload("scene_tree_execution_table.gd")
 var scene_tree_execution_table: Object
@@ -158,7 +159,7 @@ func _create_entity_update_jobs() -> Array:
 	for entity in pending_entities:
 		if entity == null:
 			continue
-		var entity_job: EntityJob = _get_job_for_entity(entity)
+		var entity_job: EntityJob = entity_manager_const._get_job_for_entity(entity)
 		if ! jobs.has(entity_job):
 			jobs.push_back(entity_job)
 			
@@ -174,7 +175,7 @@ func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_enti
 		printerr("Could not get entity for dependent!")
 		return null
 		
-	if _has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
+	if entity_manager_const._has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
 		return p_entity_dependent._entity
 	else:
 		printerr("Does not have dependency!")
@@ -186,9 +187,9 @@ func check_bidirectional_dependency(p_entity_dependency: RefCounted, p_entity_de
 	if ! p_entity_dependency._entity or ! p_entity_dependent._entity:
 		return false
 	
-	if _has_immediate_dependency_link(p_entity_dependency._entity, p_entity_dependent._entity):
+	if entity_manager_const._has_immediate_dependency_link(p_entity_dependency._entity, p_entity_dependent._entity):
 		return true
-	if _has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
+	if entity_manager_const._has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
 		return true
 		
 	return false
@@ -253,7 +254,7 @@ func instantiate_entity_and_setup(
 	p_name: String = "NetEntity",
 	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
 ) -> Node:
-	var instantiate: Node = create_entity_instance(p_packed_scene, p_name, p_master_id)
+	var instantiate: Node = entity_manager_const.create_entity_instance(p_packed_scene, p_name, p_master_id)
 	
 	instantiate._entity_cache()
 	for key in p_properties.keys():
