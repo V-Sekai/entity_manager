@@ -6,26 +6,24 @@ const mutex_lock_const = preload("res://addons/gd_util/mutex_lock.gd")
 
 #
 const ADD_ENTITY = 0
-const REMOVE_ENTITY=1
+const REMOVE_ENTITY = 1
 
 var scene_tree_execution_table: Array = []
 var _scene_tree_table_mutex: Mutex = Mutex.new()
 
 var root_node: Node = null
 
+
 # Adds an entity to the tree. Called exclusively in the main thread
 func _add_entity_instance_unsafe(p_instance: Node) -> void:
 	p_instance._entity_about_to_add()
-	
+
 	NetworkLogger.printl("Adding entity: %s" % p_instance.get_name())
 	if p_instance.is_inside_tree():
 		NetworkLogger.error("Entity is already inside tree!")
 	else:
-		var pending_entity_parent_ref: EntityRef = \
-		p_instance.hierarchy_component_node.pending_entity_parent_ref\
-		if p_instance.hierarchy_component_node\
-		else null
-		
+		var pending_entity_parent_ref: EntityRef = p_instance.hierarchy_component_node.pending_entity_parent_ref if p_instance.hierarchy_component_node else null
+
 		if pending_entity_parent_ref:
 			var entity: RuntimeEntity = pending_entity_parent_ref._entity
 			var attachment_node: Node = entity.get_attachment_node(p_instance.pending_attachment_id)
@@ -82,19 +80,16 @@ func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 
 	match p_command:
 		ADD_ENTITY:
-			NetworkLogger.printl(
-				"Scene Tree: Add Entity Command...%s" % p_entity_instance.get_name()
-			)
-			scene_tree_execution_table.push_front(
-				{"command": ADD_ENTITY, "instantiate": p_entity_instance}
-			)
+			NetworkLogger.printl("Scene Tree: Add Entity Command...%s" % p_entity_instance.get_name())
+			scene_tree_execution_table.push_front({"command": ADD_ENTITY, "instantiate": p_entity_instance})
 		REMOVE_ENTITY:
-			NetworkLogger.printl(
-				"Scene Tree: Remove Entity Command...%s" % p_entity_instance.get_name()
-			)
-			scene_tree_execution_table.push_front(
-				{
-					"command": REMOVE_ENTITY,
-					"instantiate": p_entity_instance,
-				}
+			NetworkLogger.printl("Scene Tree: Remove Entity Command...%s" % p_entity_instance.get_name())
+			(
+				scene_tree_execution_table
+				. push_front(
+					{
+						"command": REMOVE_ENTITY,
+						"instantiate": p_entity_instance,
+					}
+				)
 			)

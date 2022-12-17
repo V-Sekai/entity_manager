@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/entity_manager/simulation_logic.gd" # simulation_logic.gd
+extends "res://addons/entity_manager/simulation_logic.gd"  # simulation_logic.gd
 
 
 func get_global_position() -> Vector2:

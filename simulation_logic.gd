@@ -1,9 +1,9 @@
 @tool
-class_name SimulationLogic extends "res://addons/entity_manager/component_node.gd" # component_node.gd
-
+class_name SimulationLogic extends "res://addons/entity_manager/component_node.gd"  # component_node.gd
 
 # Static value, do not edit at runtimes
 @export var _entity_type: String
+
 
 func get_entity_type() -> String:
 	if not _entity_type.is_empty():
@@ -11,13 +11,14 @@ func get_entity_type() -> String:
 	else:
 		return "Unknown Entity Type"
 
+
 func _enter_tree() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		add_to_group("entity_managed")
 
 
 func _exit_tree() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		remove_from_group("entity_managed")
 
 
@@ -84,4 +85,3 @@ func can_request_master_from_peer(_id: int) -> bool:
 
 func can_transfer_master_from_session_master(_id: int) -> bool:
 	return false
-

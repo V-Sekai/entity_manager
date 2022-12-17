@@ -1,6 +1,6 @@
 extends Node3D
 
-var entity: Node = null :
+var entity: Node = null:
 	set = set_entity,
 	get = get_entity
 
