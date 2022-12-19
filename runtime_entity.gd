@@ -42,7 +42,6 @@ signal entity_deletion
 ##
 ## Entity Manager
 ##
-var entity_manager: Node = null
 
 ##
 ## Transform3D Notification
@@ -288,8 +287,8 @@ func _entity_deletion() -> void:
 	for dependent in strong_exclusive_dependents:
 		dependent.strong_exclusive_dependencies.erase(self)
 
-	if entity_manager:
-		entity_manager._entity_deleting(self)
+	if _EntityManager:
+		_EntityManager._entity_deleting(self)
 
 
 func can_request_master_from_peer(p_id: int) -> bool:
