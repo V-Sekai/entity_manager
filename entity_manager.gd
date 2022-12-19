@@ -369,10 +369,6 @@ func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
 		if !ProjectSettings.has_setting("entities/config/process_priority"):
 			ProjectSettings.set_setting("entities/config/process_priority", 0)
-
-			########
-			# Save #
-			########
 			if ProjectSettings.save() != OK:
 				printerr("Could not save project settings!")
 
