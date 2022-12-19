@@ -12,15 +12,8 @@ var _NetworkManager: Node = null
 const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
 const entity_manager_const = preload("res://addons/entity_manager/entity_manager.gd")
 
-##### BUG BUG BUG ###const scene_tree_execution_table_const = preload("scene_tree_execution_table.gd")
-var scene_tree_execution_table: Object
-var scene_tree_execution_table_const: Object
-
-
-func _init():
-	### BUG WORKAROUND
-	scene_tree_execution_table_const = load("res://addons/entity_manager/scene_tree_execution_table.gd")
-	scene_tree_execution_table = scene_tree_execution_table_const.new()
+const scene_tree_execution_table_const: Object = preload("res://addons/entity_manager/scene_tree_execution_table.gd")
+var scene_tree_execution_table: Object = scene_tree_execution_table_const.new()
 
 
 class EntityJob:
@@ -59,14 +52,14 @@ signal process_complete(p_delta)
 signal physics_process_complete(p_delta)
 
 
-# Returns the root node all network entities should parented to
+# Returns the root node all network entities should parented to.
 func get_entity_root_node() -> Node:
 	if _NetworkManager == null:
 		_NetworkManager = $"/root/NetworkManager"
 	return _NetworkManager.get_entity_root_node()
 
 
-# Dispatches a deferred add/remove entity command to the scene tree execution table
+# Dispatches a deferred add/remove entity command to the scene tree execution table.
 func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 	scene_tree_execution_table.scene_tree_execution_command(p_command, p_entity_instance)
 
@@ -269,7 +262,7 @@ func instantiate_entity_and_setup(
 ## entities which spawn other entities which are required to
 ## be avaliable next frame.
 ##
-## Return an EntityRef handle for the instantiate
+## Return an EntityRef handle for the instantiate.
 ##
 func spawn_entity(
 	p_packed_scene: PackedScene, p_properties: Dictionary = {}, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
@@ -304,9 +297,6 @@ func _process_reparenting() -> void:
 
 
 func _process(p_delta: float) -> void:
-	#var scheduler_usec_start:int = Time.get_ticks_usec()
-	#var jobs: Array = _create_entity_update_jobs()
-	#var scheduler_overall_time:int = Time.get_ticks_usec() - scheduler_usec_start
 
 	var all_entities_representation_process_usec_start: int = Time.get_ticks_usec()
 	for entity in get_all_entities():
@@ -324,9 +314,7 @@ func _physics_process(p_delta: float) -> void:
 
 	_process_reparenting()
 
-	#var scheduler_usec_start:int = Time.get_ticks_usec()
 	var jobs: Array = _create_entity_update_jobs()
-	#var scheduler_overall_time:int = Time.get_ticks_usec() - scheduler_usec_start
 
 	var entity_update_dependencies_usec_start: int = Time.get_ticks_usec()
 	for entity in entity_reference_dictionary.values():
