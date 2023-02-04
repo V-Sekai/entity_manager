@@ -116,12 +116,16 @@ func clear_entity_signal_connections() -> void:
 
 func _create_strong_exclusive_dependency(p_entity_ref: RefCounted) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(dependency_mutex)
-	pending_dependency_commands.push_back({"command": DependencyCommand.ADD_STRONG_EXCLUSIVE_DEPENDENCY, "entity": p_entity_ref})
+	pending_dependency_commands.push_back(
+		{"command": DependencyCommand.ADD_STRONG_EXCLUSIVE_DEPENDENCY, "entity": p_entity_ref}
+	)
 
 
 func _remove_strong_exclusive_dependency(p_entity_ref: RefCounted) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(dependency_mutex)
-	pending_dependency_commands.push_back({"command": DependencyCommand.REMOVE_STRONG_EXCLUSIVE_DEPENDENCY, "entity": p_entity_ref})
+	pending_dependency_commands.push_back(
+		{"command": DependencyCommand.REMOVE_STRONG_EXCLUSIVE_DEPENDENCY, "entity": p_entity_ref}
+	)
 
 
 func _update_dependencies() -> void:
@@ -152,7 +156,9 @@ func _update_dependencies() -> void:
 
 
 func request_to_become_master() -> void:
-	$"/root/NetworkManager".network_replication_manager.request_to_become_master(network_identity_node.network_instance_id, self, $"/root/NetworkManager".get_current_peer_id())
+	$"/root/NetworkManager".network_replication_manager.request_to_become_master(
+		network_identity_node.network_instance_id, self, $"/root/NetworkManager".get_current_peer_id()
+	)
 
 
 func process_master_request(p_id: int) -> void:
@@ -333,7 +339,10 @@ func get_entity_type() -> String:
 
 
 func get_last_transform():
-	if simulation_logic_node and simulation_logic_node is node_2d_simulation_logic_const or simulation_logic_node is node_3d_simulation_logic_const:
+	if (
+		simulation_logic_node and simulation_logic_node is node_2d_simulation_logic_const
+		or simulation_logic_node is node_3d_simulation_logic_const
+	):
 		return simulation_logic_node.get_last_transform()
 
 	return Transform3D()
@@ -355,12 +364,48 @@ static func get_entity_properties(p_show_properties: bool) -> Array:
 		usage = 0
 
 	var entity_properties: Array = [
-		{"name": "transform_notification_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"},
-		{"name": "hierarchy_component_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"},
-		{"name": "simulation_logic_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"},
-		{"name": "network_identity_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"},
-		{"name": "network_logic_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"},
-		{"name": "rpc_table_node_path", "type": TYPE_NODE_PATH, "usage": usage, "hint": PROPERTY_HINT_FLAGS, "hint_string": "NodePath"}
+		{
+			"name": "transform_notification_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		},
+		{
+			"name": "hierarchy_component_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		},
+		{
+			"name": "simulation_logic_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		},
+		{
+			"name": "network_identity_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		},
+		{
+			"name": "network_logic_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		},
+		{
+			"name": "rpc_table_node_path",
+			"type": TYPE_NODE_PATH,
+			"usage": usage,
+			"hint": PROPERTY_HINT_FLAGS,
+			"hint_string": "NodePath"
+		}
 	]
 
 	return entity_properties
