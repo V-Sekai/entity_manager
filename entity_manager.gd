@@ -262,6 +262,8 @@ func instantiate_entity_and_setup(
 
 	instantiate._entity_cache()
 	for key in p_properties.keys():
+		if not instantiate.simulation_logic_node:
+			continue
 		instantiate.simulation_logic_node.set(key, p_properties[key])
 
 	if _NetworkManager == null:
