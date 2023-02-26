@@ -492,6 +492,9 @@ func _ready() -> void:
 
 func _threaded_instance_setup(p_instance_id: int, p_network_reader: RefCounted) -> void:
 	_entity_cache()
+	
+	if not has_method("_threaded_instance_setup"):
+		return
 
 	if simulation_logic_node:
 		simulation_logic_node._threaded_instance_setup(p_instance_id, p_network_reader)
